@@ -1,0 +1,178 @@
+<?php
+
+/**
+ * @file
+ * Implementation of robertson library reports module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function upei_roblib_reports_menu() {
+
+  $items['admin/islandora/tools/roblib/ivoices'] = array(
+    'title' => 'Roblib Island Voices Config',
+    'description' => 'Configuration for UPEI Roblib Island Voices',
+    'access arguments' => array('administer site configuration'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('upei_roblib_ivoices_config_form'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * A form for managing the modules configuration.
+ *
+ * @param array $form
+ *   A Drupal form array
+ * @param array $form_state
+ *   A Drupal formstate array
+ *
+ * @return array
+ *   A Drupal form
+ */
+function upei_roblib_ivoices_config_form($form, &$form_state) {
+  // TODO create the form
+  //return system_settings_form($form);
+}
+
+
+/**
+ * Implements hook_CMODEL_PID_islandora_view_object().
+ */
+function upei_roblib_ivoices_islandora_audioCModel_islandora_view_object($object, $page_number, $page_size) {
+  $output = theme('ivoices', array('islandora_object' => $object));
+  return array('ivoices' => $output);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function upei_roblib_ivoices_theme($existing, $type, $theme, $path) {
+  return array(
+    'ivoices' => array(
+      'template' => 'theme/upei-roblib-ivoices',
+      'variables' => array('islandora_object' => NULL),
+    ),
+  );
+}
+
+/**
+ * Implements template_preprocess_hook().
+ */
+function upei_roblib_ivoices_preprocess_ivoices(array &$variables) {
+  $media = upei_roblib_ivoices_pbcore($variables);
+  if($media == "Sound") {
+    islandora_audio_preprocess_islandora_audio($variables);
+  }
+  // Not sure if this is needed was in the drupal 6 version so leaving it for reference
+  if($media == "Moving Image") {
+    islandora_video_preprocess_islandora_video($variables);
+  }
+
+}
+
+function upei_roblib_ivoices_pbcore(&$variables) {
+  $object = $variables['islandora_object'];
+  $pb_xml = $object['PBCORE']->content;
+
+  $simpleCore = simplexml_load_string($pb_xml);
+  //$titles = $simpleCore->xpath('//pb:pbcoreTitle');
+  $title = $simpleCore->pbcoreTitle;
+  $media = $simpleCore->pbcoreInstantiation[0]->instantiationMediaType;
+  $rights = $simpleCore->pbcoreRightsSummary[0]->rightsSummary;
+  $segments = $simpleCore->pbcoreDescription[1];
+  $segments = preg_replace('[/\W/|\s+]', ' ', $segments);
+  $segments = preg_replace('/ SIDE/', "\n\nSIDE", $segments);
+  $segments = preg_replace('/\|/', "\n", $segments);
+  $segments = preg_replace('/\n{3}/', "\n\n", $segments);
+  $interviewee = $simpleCore->pbcoreContributor[0]->contributor;
+  $abstract = $simpleCore->pbcoreDescription[0];
+  $duration = $simpleCore->pbcoreInstantiation[1]->instantiationDuration;
+  $dates = $simpleCore->pbcoreInstantiation[0]->instantiationDate;
+  foreach ($simpleCore->pbcoreCoverage as $coverage) {
+    if ($coverage->coverageType == 'Temporal') {
+      $times = $coverage->coverage;
+    }
+    if ($coverage->coverageType == 'Spatial') {
+      $places = $coverage->coverage;
+    }
+  }
+
+  $details = array('element' => array(
+    '#title' => t("Recording Details: @title", array('@title' => $title)),
+    '#rows' => 20,
+    '#resizable' => TRUE,
+    '#attributes' => array(
+      'class' => 'ivoices-interview-details',
+      'readonly' => 'readonly'
+    ),
+    '#value' => $segments
+  ));
+  $output = "<div id = 'ivoices-section-details '>" . theme_textarea($details) . "</div>";
+
+  $rows = array();
+  $rows['1'] = array(
+    '#prefix' => "<dl class = 'ivoices-detail'>",
+    '#markup' => "<dt class = 'ivoices-label'>" . t('Interviewee(s):') . "</dt><dd class ='ivoices-data'>" .  reset($interviewee) . "</dd>",
+    '#suffix' => "</dl>"
+  );
+  $rows['2'] = array(
+    '#prefix' => "<dl class = 'ivoices-detail'>",
+    '#markup' => "<dt class = 'ivoices-label'>" . t('Playing Time:') . "</dt><dd class ='ivoices-data'>" .  reset($duration) . "</dd>",
+    '#suffix' => "</dl>"
+  );
+  $rows['3'] = array(
+    '#prefix' => "<dl class = 'ivoices-detail'>",
+    '#markup' => "<dt class = 'ivoices-label'>" . t('Interview Date(s):') . "</dt><dd class ='ivoices-data'> reset($dates) . \"</dd>",
+    '#suffix' => "</dl>"
+  );
+  $rows['4'] = array(
+    '#prefix' => "<dl class = 'ivoices-detail'>",
+    '#markup' => "<dt class = 'ivoices-label'>" . t('Interview Summary:') . "</dt><dd class ='ivoices-data'>" .  $abstract . "</dd>",
+    '#suffix' => "</dl>"
+  );
+  $rows['5'] = array(
+    '#prefix' => "<dl class = 'ivoices-detail'>",
+    '#markup' => "<dt class = 'ivoices-label'>" . t('Place(s) Discussed:') . "</dt><dd class ='ivoices-data'>" .  reset($places) . "</dd>",
+    '#suffix' => "</dl>"
+  );
+  $rows['6'] = array(
+    '#prefix' => "<dl class = 'ivoices-detail'>",
+    '#markup' => "<dt class = 'ivoices-label'>" . t('Time(s) Discussed:') . "</dt><dd class ='ivoices-data'>" .  reset($times) . "</dd>",
+    '#suffix' => "</dl>"
+  );
+  $rows['7'] = array(
+    '#prefix' => "<dl class = 'ivoices-detail'>",
+    '#markup' => "<dt class = 'ivoices-label'>" . t('Rights Information:') . "</dt><dd class ='ivoices-data'>" .  reset($rights) . "</dd>",
+    '#suffix' => "</dl><div class='clearfix'/>"
+  );
+
+  $output_details = array(
+    'upei-roblib-ivoices-details' => array(
+      t('elements') => array($rows),
+      '#prefix' => '<div class="ivoices-details">',
+      '#suffix' => '</div>',
+    ),
+  );
+
+  drupal_alter('upei_roblib_ivoices_details', $output_details);
+  $variables['pbcore_content'] = $output . drupal_render($output_details);
+  return $media;
+
+}
+
+/**
+ * Remove the sp_audioCMmodel content as we only want our custom display
+ * @param $object
+ * @param $rendered
+ */
+function upei_roblib_ivoices_islandora_audioCModel_islandora_view_object_alter(&$object, &$rendered) {
+   $arr = reset($rendered);
+   $rendered = array($arr);
+}
+
+
+

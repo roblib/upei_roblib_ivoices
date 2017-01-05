@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Installation hooks.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function upei_roblib_ivoices_uninstall() {
+  // TODO remove any variables created by this module.
+}

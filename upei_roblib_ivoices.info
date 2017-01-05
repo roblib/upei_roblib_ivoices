@@ -1,0 +1,9 @@
+name = UPEI Roblib Islandvoices
+description = Custom views for islandvoices content
+package = Roblib
+dependencies[] = islandora
+dependencies[] = islandora_audio
+version = 7.x-dev
+core = 7.x
+configure = admin/islandora/tools/roblib/ivoices
+stylesheets[all][] = css/islandvoices.css

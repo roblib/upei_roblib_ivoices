@@ -1,0 +1,130 @@
+
+
+#ivoices-audioplayer {
+width: 417px;
+float: left; 
+clear: left; 
+display: block;
+height: 300px;
+}
+
+#ivoices-section-details {
+width: 417px;
+float: left; 
+clear: left;
+z-index: 99;
+}
+
+#ivoices-section-details .resizable-textarea,
+#ivoices-section-details textarea {
+width: 410px;
+
+}
+
+#ivoices-section-details textarea {
+padding: 5px 0 0 5px;
+height: 340px;
+}
+
+#audio-page-content {
+position: relative;
+}
+
+#ivoices-interview-details {
+position: absolute; 
+margin-left: 430px; 
+padding-top: 0px;
+z-index: 0;
+margin-top: 10px;
+}
+
+#ivoices-detail-table {
+background-color: #f5f6fd;
+}
+
+#ivoices-interview-details .form-item {
+margin-top: 10px;
+
+}
+
+#ivoices-detail-table.form-item {
+height: 614px;
+overflow: auto;
+display: block;
+}
+
+#ivoices-interview-details table td { 
+padding: 10px
+}
+
+#ivoices-interview-details table td .ivoices-label {
+float: left;
+padding-right: 10px;
+font-weight: bold;
+}
+
+#ivoices-detail-table.form-item {
+margin:0;
+}
+
+#ivoices-interview-details table {
+border-style: solid;
+border-color: #e5e5e5 #B9D0E8 #B9D0E8 #B9D0E8;
+border-width: 1px;
+}
+
+#ivoices-interview-details tr.odd td {
+background-color: #fff;
+}
+
+#ivoices-interview-details tr.even td {
+background-color: #f5f6fd;
+}
+
+#ivoices-interview-details tr.even,
+#ivoices-interview-details tr.odd {
+    border-bottom: 0px solid #f5f6fd;
+}
+
+#ivoices-interview-details label {
+padding: 5px 15px 15px 5px;
+margin-bottom: 0;
+font-size: 1.3em;
+border-style: solid;
+border-color: #b9d0e8 #b9d0e8 #ffffff #b9d0e8;
+border-width: 1px;
+background-color: #f5f6fd;
+}
+
+#ivoices-section-details label {
+background-color: #f5f6fd;
+padding: 5px 15px 15px 5px;
+border-top: 1px solid #B9D0E8;
+border-left: 1px solid #B9D0E8;
+border-right: 1px solid #B9D0E8;
+}
+
+.ivoices-data {
+    padding: 5px 15px 15px 5px;
+
+}
+
+.ivoices-label {
+    background-color: #f5f6fd;
+    padding: 5px 15px 15px 5px;
+    border-top: 1px solid #B9D0E8;
+    border-left: 1px solid #B9D0E8;
+    border-right: 1px solid #B9D0E8;
+    border-bottom: 1px solid #B9D0E8;
+}
+
+#ivoice-index .item-list ul {
+    padding: 0;
+}
+
+#ivoice-index .item-list .pager li {
+    padding-left: 0.4em;
+    padding-right: 0.4em;    
+}    
+
+
