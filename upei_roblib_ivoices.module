@@ -101,17 +101,22 @@ function upei_roblib_ivoices_pbcore(&$variables) {
     }
   }
 
-  $details = array('element' => array(
-    '#title' => t("Recording Details: @title", array('@title' => $title)),
-    '#rows' => 20,
-    '#resizable' => TRUE,
-    '#attributes' => array(
-      'class' => 'ivoices-interview-details',
-      'readonly' => 'readonly'
-    ),
-    '#value' => $segments
-  ));
-  $output = "<div id = 'ivoices-section-details '>" . theme_textarea($details) . "</div>";
+  if(!empty($segments)) {
+    $details = array(
+      'element' => array(
+        '#title' => t("Recording Details: @title", array('@title' => $title)),
+        '#label' => t("Recording Details: @title", array('@title' => $title)),
+        '#rows' => 20,
+        '#resizable' => TRUE,
+        '#attributes' => array(
+          'class' => 'ivoices-interview-details',
+          'readonly' => 'readonly'
+        ),
+        '#value' => $segments
+      )
+    );
+    $output = "<div id = 'ivoices-section-details '>" . theme_textarea($details) . "</div>";
+  }
 
   $rows = array();
   $rows['1'] = array(
@@ -126,7 +131,7 @@ function upei_roblib_ivoices_pbcore(&$variables) {
   );
   $rows['3'] = array(
     '#prefix' => "<dl class = 'ivoices-detail'>",
-    '#markup' => "<dt class = 'ivoices-label'>" . t('Interview Date(s):') . "</dt><dd class ='ivoices-data'> reset($dates) . \"</dd>",
+    '#markup' => "<dt class = 'ivoices-label'>" . t('Interview Date(s):') . "</dt><dd class ='ivoices-data'>" . reset($dates) . "</dd>",
     '#suffix' => "</dl>"
   );
   $rows['4'] = array(
