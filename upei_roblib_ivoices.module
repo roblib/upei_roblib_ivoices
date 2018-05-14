@@ -65,7 +65,7 @@ function upei_roblib_ivoices_theme($existing, $type, $theme, $path) {
 function upei_roblib_ivoices_preprocess_ivoices(array &$variables) {
   $media = upei_roblib_ivoices_pbcore($variables);
   if($media == "Sound") {
-    islandora_audio_preprocess_islandora_audio($variables);
+    template_preprocess_islandora_audio($variables);
   }
   // Not sure if this is needed was in the drupal 6 version so leaving it for reference
   if($media == "Moving Image") {
