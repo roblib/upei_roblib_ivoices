@@ -180,4 +180,23 @@ function upei_roblib_ivoices_islandora_audioCModel_islandora_view_object_alter(&
 }
 
 
-
+/**
+ * Implements hook_xml_form_builder_get_transforms().
+ *
+ * Grabs any XSLTs from the "transforms" directory inside of this module.
+ */
+function upei_roblib_ivoices_xml_form_builder_get_transforms() {
+  $p = drupal_get_path('module', 'upei_roblib_ivoices');
+  $transforms = array();
+  $include_path = "$p/transforms";
+  $dir = opendir($include_path);
+  if ($dir !== FALSE) {
+    while (($file = readdir($dir)) !== FALSE) {
+      if (preg_match('/\.xslt?$/', $file)) {
+        $transforms["$file"] = "$include_path/$file";
+      }
+    }
+  }
+  closedir($dir);
+  return $transforms;
+}
